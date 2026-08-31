@@ -4,34 +4,7 @@ Scaffold a full API layer - Form Request, API Resource, Service, Controller,
 and optionally a Policy, DTO, conflict Exception, and Pest tests - from a
 single `artisan` command.
 
-## Before you publish this
-
-This package ships with placeholder names. Rename before pushing to
-Packagist / your own VCS:
-
-1. In `composer.json`: change `"name"` from `code20/laravel-api-resource`
-   to your actual vendor slug, and update the PSR-4 namespace + `extra.laravel.providers`
-   entry if you rename the PHP namespace.
-2. Find-and-replace `Code20\ApiBoilerplate` with your own namespace across
-   `src/ApiBoilerplateServiceProvider.php` and
-   `src/Console/Commands/MakeApiResourceCommand.php`.
-3. Update the author info in `composer.json` and `LICENSE.md`.
-
 ## Installation
-
-Local package during development (path repository), add to the **consuming
-app's** `composer.json`:
-
-```json
-{
-    "repositories": [
-        { "type": "path", "url": "../laravel-api-resource" }
-    ],
-    "require": {
-        "code20/laravel-api-resource": "*"
-    }
-}
-```
 
 ```bash
 composer require code20/laravel-api-resource
@@ -109,7 +82,7 @@ php artisan make:api-resource post --policy --dto --dry-run
 ## Requirements
 
 - PHP 8.1+
-- Laravel 10, 11, or 12
+- Laravel 10, 11, 12 or 13
 
 ## License
 
