@@ -1,0 +1,28 @@
+<?php
+
+namespace {{namespace}};
+
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class {{modelClass}}ConflictException extends Exception
+{
+    public function __construct(string $message = '{{modelClass}} conflict.')
+    {
+        parent::__construct($message);
+    }
+
+    /**
+     * Laravel automatically calls render() on an exception if it defines one,
+     * so this maps to a clean JSON response with no global handler edits needed.
+     */
+    public function render(Request $request): JsonResponse
+    {
+        return response()->json([
+            'status'  => 'Error occurred...',
+            'message' => $this->getMessage(),
+            'data'    => null,
+        ], 409);
+    }
+}

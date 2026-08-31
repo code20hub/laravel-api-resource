@@ -1,0 +1,49 @@
+<?php
+
+namespace {{namespace}};
+
+use App\Http\Controllers\Controller;
+use App\Models\{{modelClass}};
+use App\Http\Requests\{{folder}}\{{modelClass}}Request;
+use App\Http\Resources\{{folder}}\{{modelClass}}Resource;
+use App\Services\{{folder}}\{{modelClass}}Service;
+use App\Traits\HttpResponses;
+use Illuminate\Http\JsonResponse;
+{{dtoImport}}
+
+class {{class}}Controller extends Controller
+{
+    use HttpResponses;
+
+    public function __construct(protected {{modelClass}}Service ${{variableName}}Service) {}
+
+    public function index(): JsonResponse
+    {
+        $data = $this->{{variableName}}Service->getAll();
+        return $this->success({{modelClass}}Resource::collection($data));
+    }
+
+    public function store({{modelClass}}Request $request): JsonResponse
+    {
+        $data = $this->{{variableName}}Service->create({{requestDataArg}});
+        return $this->success(new {{modelClass}}Resource($data), 'Resource created successfully.', 201);
+    }
+
+    public function show({{modelClass}} ${{variableName}}): JsonResponse
+    {
+        $data = $this->{{variableName}}Service->getById(${{variableName}});
+        return $this->success(new {{modelClass}}Resource($data));
+    }
+
+    public function update({{modelClass}}Request $request, {{modelClass}} ${{variableName}}): JsonResponse
+    {
+        $data = $this->{{variableName}}Service->update(${{variableName}}, {{requestDataArg}});
+        return $this->success(new {{modelClass}}Resource($data), 'Resource updated successfully.');
+    }
+
+    public function destroy({{modelClass}} ${{variableName}}): JsonResponse
+    {
+        $this->{{variableName}}Service->delete(${{variableName}});
+        return $this->success(null, 'Resource deleted successfully.');
+    }
+}

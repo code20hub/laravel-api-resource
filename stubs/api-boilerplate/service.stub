@@ -1,0 +1,41 @@
+<?php
+
+namespace {{namespace}};
+
+use App\Models\{{modelClass}};
+{{dtoImport}}
+
+class {{class}}Service
+{
+    public function getAll()
+    {
+        return {{modelClass}}::latest()->get();
+    }
+
+    public function create({{dataType}} $data): {{modelClass}}
+    {
+        return {{modelClass}}::create({{dataAccessor}});
+    }
+
+    public function getById({{modelClass}} ${{variableName}}): {{modelClass}}
+    {
+        return ${{variableName}};
+    }
+
+    public function update({{modelClass}} ${{variableName}}, {{dataType}} $data): {{modelClass}}
+    {
+        // Example of a business-rule guard using a dedicated exception instead
+        // of an ad-hoc try/catch in the controller (generate one with --exception):
+        // if (${{variableName}}->is_locked) {
+        //     throw new {{modelClass}}ConflictException("This {{variableName}} is locked.");
+        // }
+
+        ${{variableName}}->update({{dataAccessor}});
+        return ${{variableName}};
+    }
+
+    public function delete({{modelClass}} ${{variableName}}): void
+    {
+        ${{variableName}}->delete();
+    }
+}

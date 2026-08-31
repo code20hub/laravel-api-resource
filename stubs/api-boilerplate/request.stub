@@ -1,0 +1,21 @@
+<?php
+
+namespace {{namespace}};
+
+use Illuminate\Foundation\Http\FormRequest;
+{{modelImport}}
+
+class {{class}}Request extends FormRequest
+{
+    public function authorize(): bool
+    {
+        {{authorizeBody}}
+    }
+
+    public function rules(): array
+    {
+        return [
+            // Define rules dynamically here
+        ];
+    }
+}

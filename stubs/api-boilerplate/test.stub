@@ -1,0 +1,37 @@
+<?php
+
+use App\Models\{{modelClass}};
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+it('lists {{routeUri}}', function () {
+    {{modelClass}}::factory()->count(3)->create();
+
+    $response = $this->getJson('/api/{{routeUri}}');
+
+    $response->assertOk()->assertJsonStructure(['status', 'message', 'data']);
+});
+
+it('creates a {{variableName}}', function () {
+    // TODO: fill in required fields for {{modelClass}}
+    $payload = [];
+
+    $response = $this->postJson('/api/{{routeUri}}', $payload);
+
+    $response->assertCreated();
+});
+
+it('shows a single {{variableName}}', function () {
+    ${{variableName}} = {{modelClass}}::factory()->create();
+
+    $response = $this->getJson('/api/{{routeUri}}/' . ${{variableName}}->id);
+
+    $response->assertOk();
+});
+
+it('rejects an invalid {{variableName}} payload', function () {
+    $response = $this->postJson('/api/{{routeUri}}', []);
+
+    $response->assertStatus(422);
+});
