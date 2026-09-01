@@ -164,8 +164,7 @@ class MakeApiResourceCommand extends Command
 
         [$namespaceFolder, $pathFolder, $routePrefix] = $this->resolveFolder(
             $job['subfolder'] ?? null,
-            $job['api_version'] ?? null,
-            Str::studly(Str::plural($name))
+            $job['api_version'] ?? null
         );
 
         $usePolicy    = $job['policy'] ?? false;
@@ -216,7 +215,7 @@ class MakeApiResourceCommand extends Command
         $tokens = [
             'modelClass'    => $singularClass,
             'variableName'  => $variableName,
-            'folder'        => $namespaceFolder,
+            'folder'        => $namespaceFolder ? "\\{$namespaceFolder}" : '',
             'dtoImport'     => $useDto ? "use {$dtoNamespace}\\{$singularClass}Data;" : '',
             'dataType'      => $useDto ? "{$singularClass}Data" : 'array',
             'dataAccessor'  => $useDto ? '$data->toArray()' : '$data',
@@ -232,28 +231,28 @@ class MakeApiResourceCommand extends Command
 
         $this->generateLayer(
             'request',
-            config('api-boilerplate.paths.requests') . "/{$pathFolder}/{$singularClass}Request.php",
+            $this->buildRelativePath(config('api-boilerplate.paths.requests'), $pathFolder, "{$singularClass}Request.php"),
             config('api-boilerplate.namespaces.requests') . ($namespaceFolder ? "\\{$namespaceFolder}" : ''),
             $singularClass, $tokens, $force, $dryRun
         );
 
         $this->generateLayer(
             'resource',
-            config('api-boilerplate.paths.resources') . "/{$pathFolder}/{$singularClass}Resource.php",
+            $this->buildRelativePath(config('api-boilerplate.paths.resources'), $pathFolder, "{$singularClass}Resource.php"),
             config('api-boilerplate.namespaces.resources') . ($namespaceFolder ? "\\{$namespaceFolder}" : ''),
             $singularClass, $tokens, $force, $dryRun
         );
 
         $this->generateLayer(
             'service',
-            config('api-boilerplate.paths.services') . "/{$pathFolder}/{$singularClass}Service.php",
+            $this->buildRelativePath(config('api-boilerplate.paths.services'), $pathFolder, "{$singularClass}Service.php"),
             config('api-boilerplate.namespaces.services') . ($namespaceFolder ? "\\{$namespaceFolder}" : ''),
             $singularClass, $tokens, $force, $dryRun
         );
 
         $this->generateLayer(
             'controller',
-            config('api-boilerplate.paths.controllers') . "/{$pathFolder}/{$singularClass}Controller.php",
+            $this->buildRelativePath(config('api-boilerplate.paths.controllers'), $pathFolder, "{$singularClass}Controller.php"),
             config('api-boilerplate.namespaces.controllers') . ($namespaceFolder ? "\\{$namespaceFolder}" : ''),
             $singularClass, $tokens, $force, $dryRun
         );
@@ -261,7 +260,7 @@ class MakeApiResourceCommand extends Command
         if ($useDto) {
             $this->generateLayer(
                 'dto',
-                config('api-boilerplate.paths.dtos') . "/{$pathFolder}/{$singularClass}Data.php",
+                $this->buildRelativePath(config('api-boilerplate.paths.dtos'), $pathFolder, "{$singularClass}Data.php"),
                 $dtoNamespace, $singularClass, $tokens, $force, $dryRun
             );
         }
@@ -269,7 +268,7 @@ class MakeApiResourceCommand extends Command
         if ($useException) {
             $this->generateLayer(
                 'exception',
-                config('api-boilerplate.paths.exceptions') . "/{$pathFolder}/{$singularClass}ConflictException.php",
+                $this->buildRelativePath(config('api-boilerplate.paths.exceptions'), $pathFolder, "{$singularClass}ConflictException.php"),
                 $exceptionNamespace, $singularClass, $tokens, $force, $dryRun
             );
         }
@@ -289,7 +288,7 @@ class MakeApiResourceCommand extends Command
      * namespace and filesystem path would cause subfolders like "v1/Admin" to
      * produce a broken literal directory named "v1\Admin" on Linux/macOS.
      */
-    protected function resolveFolder(?string $subfolder, ?string $apiVersion, string $defaultPluralStudly): array
+    protected function resolveFolder(?string $subfolder, ?string $apiVersion): array
     {
         $parts = [];
 
@@ -307,15 +306,22 @@ class MakeApiResourceCommand extends Command
             }
         }
 
-        if (empty($parts)) {
-            $parts[] = $defaultPluralStudly;
-        }
-
         $pathFolder = implode('/', $parts);
         $namespaceFolder = implode('\\', $parts);
         $routePrefix = $apiVersion ? Str::lower($apiVersion) : '';
 
         return [$namespaceFolder, $pathFolder, $routePrefix];
+    }
+
+    /**
+     * Build a relative filesystem path, avoiding double slashes when no folder
+     * is provided.
+     */
+    protected function buildRelativePath(string $basePath, string $folder, string $fileName): string
+    {
+        return $folder !== ''
+            ? "{$basePath}/{$folder}/{$fileName}"
+            : "{$basePath}/{$fileName}";
     }
 
     /**

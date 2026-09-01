@@ -14,6 +14,20 @@ Once published to Packagist, that second step is all a consumer needs to run
 - Laravel's package auto-discovery registers the service provider and the
 `make:api-resource` command automatically. Nothing to add to `config/app.php`.
 
+## Updating
+
+After installation, pull in the latest version with:
+
+```bash
+composer update code20/laravel-api-resource
+```
+
+Or update all packages at once:
+
+```bash
+composer update
+```
+
 ## Publishing config/stubs (optional)
 
 The package works out of the box with its bundled stubs and defaults. To
@@ -57,6 +71,34 @@ php artisan make:api-resource --manifest=resources.json
 # Preview only, writes nothing
 php artisan make:api-resource post --policy --dto --dry-run
 ```
+
+### Where files are generated
+
+Without `--subfolder`, files are placed directly in each layer's default location:
+
+```text
+app/Http/Controllers/PostController.php
+app/Http/Requests/PostRequest.php
+app/Http/Resources/PostResource.php
+app/Services/PostService.php
+```
+
+Pass `--subfolder` to nest resources under a custom directory instead:
+
+```bash
+php artisan make:api-resource post --subfolder=v1/Admin
+```
+
+This would generate:
+
+```text
+app/Http/Controllers/v1/Admin/PostController.php
+app/Http/Requests/v1/Admin/PostRequest.php
+app/Http/Resources/v1/Admin/PostResource.php
+app/Services/v1/Admin/PostService.php
+```
+
+`--api-version=v1` still adds an `Api\V1` namespace segment and prefixes routes with `v1/`.
 
 `resources.json` example:
 ```json

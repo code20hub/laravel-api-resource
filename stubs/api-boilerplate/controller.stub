@@ -4,9 +4,9 @@ namespace {{namespace}};
 
 use App\Http\Controllers\Controller;
 use App\Models\{{modelClass}};
-use App\Http\Requests\{{folder}}\{{modelClass}}Request;
-use App\Http\Resources\{{folder}}\{{modelClass}}Resource;
-use App\Services\{{folder}}\{{modelClass}}Service;
+use App\Http\Requests{{folder}}\{{modelClass}}Request;
+use App\Http\Resources{{folder}}\{{modelClass}}Resource;
+use App\Services{{folder}}\{{modelClass}}Service;
 use App\Traits\HttpResponses;
 use Illuminate\Http\JsonResponse;
 {{dtoImport}}
